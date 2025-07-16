@@ -27,4 +27,4 @@ ENV STREAMLIT_SERVER_ENABLECORS=false
 EXPOSE 8501
 
 # Start the app
-CMD ["streamlit", "run", "main.py"]
+CMD ["streamlit", "run", "app/main.py", "--server.port", "8080"]
