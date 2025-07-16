@@ -33,27 +33,6 @@ GROQ_API_KEY=your-groq-api-key-here
 streamlit run app/main.py
 ```
 
-### 5. (Optional) Use a Free Local Llama Model with Ollama
-- [Install Ollama](https://ollama.com/)
-- Pull a model (e.g., Llama 3):
-  ```bash
-  ollama pull llama3
-  ```
-- Update `app/chatbot.py` to use the Ollama integration (see code comments).
-
-## Deployment on Render
-1. Push your code to GitHub ([repo link](https://github.com/Prashanth1602/llama_chatbot.git)).
-2. Create a new Web Service on [Render](https://render.com/), connect your repo.
-3. Set the build command:
-   ```
-   pip install -r requirements.txt
-   ```
-4. Set the start command:
-   ```
-   streamlit run app/main.py --server.port $PORT
-   ```
-5. Add your `GROQ_API_KEY` as an environment variable in the Render dashboard.
-
 ## File Structure
 ```
 llama_chatbot/
