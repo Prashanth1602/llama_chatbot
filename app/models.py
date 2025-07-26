@@ -18,7 +18,7 @@ Base = declarative_base()
 class User(Base):
     __tablename__ = "users"
     
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(String, primary_key=True)
     email = Column(String, unique=True, index=True)
     created_at = Column(DateTime, default=datetime.utcnow)
 
@@ -26,10 +26,14 @@ class ChatHistory(Base):
     __tablename__ = "chat_history"
     
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, index=True)
+    user_id = Column(String, index=True)
     question = Column(Text)
     response = Column(Text)
     created_at = Column(DateTime, default=datetime.utcnow)
+
+    __table_args__ = (
+        ForeignKeyConstraint(['user_id'], ['users.id']),
+    )
 
 # Create tables
 try:

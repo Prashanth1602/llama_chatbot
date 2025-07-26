@@ -40,14 +40,31 @@ else:
                 response = get_response(question)
                 st.markdown(response)
                 
+                # Save chat history
                 db = next(get_db())
-                chat = ChatHistory(
-                    user_id=st.session_state["user"].uid,
-                    question=question,
-                    response=response
-                )
-                db.add(chat)
-                db.commit()
+                try:
+                    # Check if user exists, if not create new user
+                    user = db.query(User).filter_by(id=st.session_state["user"].uid).first()
+                    if not user:
+                        user = User(
+                            id=st.session_state["user"].uid,
+                            email=st.session_state["user"].email
+                        )
+                        db.add(user)
+                        db.commit()
+
+                    # Save chat
+                    chat = ChatHistory(
+                        user_id=st.session_state["user"].uid,
+                        question=question,
+                        response=response
+                    )
+                    db.add(chat)
+                    db.commit()
+                    st.success("Chat saved successfully!")
+                except Exception as e:
+                    st.error(f"Error saving chat: {str(e)}")
+                    db.rollback()
         else:
             st.error("Please enter a question before clicking the button.")
     
