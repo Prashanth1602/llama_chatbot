@@ -1,7 +1,52 @@
 import streamlit as st
 from chatbot import get_response
 from auth import login, signup, login_required
-from models import get_db, ChatHistory, User
+from models import get_db, ChatHistory, User, delete_chat_history
+
+# Set page configuration
+st.set_page_config(
+    page_title="TechieTina - AI Assistant",
+    page_icon="🤖",
+    layout="centered",
+    initial_sidebar_state="collapsed"
+)
+
+# Add custom CSS for styling
+st.markdown("""
+    <style>
+        .stTextInput label {
+            color: #1E88E5;
+        }
+        .stButton button {
+            background-color: #1E88E5;
+            color: white;
+        }
+        .stButton button:hover {
+            background-color: #1565C0;
+        }
+        .st-expander {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        .st-expander:hover {
+            background-color: #e9ecef;
+        }
+        .delete-button {
+            background-color: #dc3545;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .delete-button:hover {
+            background-color: #c82333;
+        }
+        .stCheckbox label {
+            color: #1E88E5;
+        }
+    </style>
+""", unsafe_allow_html=True)
 
 st.set_page_config(page_title="TechieTina - AI Assistant", page_icon=":robot_face:", layout="centered")
 
@@ -79,8 +124,18 @@ else:
             if chats:
                 for chat in chats:
                     with st.expander(f"Chat from {chat.created_at}"):
-                        st.write("**Question:**", chat.question)
-                        st.write("**Response:**", chat.response)
+                        col1, col2 = st.columns([4, 1])
+                        with col1:
+                            st.markdown("""
+                                <div style='color: #1E88E5; font-weight: bold;'>Question:</div>
+                                <div style='margin-left: 20px;'>{}</div>
+                                <div style='color: #1E88E5; font-weight: bold;'>Response:</div>
+                                <div style='margin-left: 20px;'>{}</div>
+                            """.format(chat.question, chat.response), unsafe_allow_html=True)
+                        with col2:
+                            if st.button("🗑️ Delete", key=f"delete_{chat.id}", help="Delete this chat"):
+                                delete_chat_history(chat.id)
+                                st.experimental_rerun()
             else:
                 st.info("No previous chats found.")
         except Exception as e:

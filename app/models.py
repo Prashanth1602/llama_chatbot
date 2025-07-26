@@ -52,3 +52,18 @@ def get_db():
         yield db
     finally:
         db.close()
+
+def delete_chat_history(chat_id):
+    db = SessionLocal()
+    try:
+        chat = db.query(ChatHistory).filter_by(id=chat_id).first()
+        if chat:
+            db.delete(chat)
+            db.commit()
+            return True
+        return False
+    except Exception as e:
+        db.rollback()
+        return False
+    finally:
+        db.close()
