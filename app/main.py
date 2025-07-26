@@ -18,7 +18,9 @@ if not st.session_state.get("user"):
             if user:
                 st.session_state["user"] = user
                 st.rerun()
-    
+            else:
+                st.error("Invalid credentials. Please try again.")
+
     with tab2:
         new_email = st.text_input("New Email")
         new_password = st.text_input("New Password", type="password")
@@ -27,6 +29,8 @@ if not st.session_state.get("user"):
             if user:
                 st.session_state["user"] = user
                 st.rerun()
+            else:
+                st.error("Error creating account. Please try again.")
 
 else:
     st.title("TechieTina - AI Assistant")

@@ -29,8 +29,7 @@ def login_required(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         if not state.get("user"):
-            st.error("Please log in to continue.")
-            return None
+            raise ValueError("Please log in to continue.")
         return func(*args, **kwargs)
     return wrapper
 
@@ -39,7 +38,6 @@ def login(email, password):
         user = auth.get_user_by_email(email)
         return user
     except Exception as e:
-        st.error("Invalid credentials. Please try again.")
         return None
 
 def signup(email, password):
@@ -50,5 +48,4 @@ def signup(email, password):
         )
         return user
     except Exception as e:
-        st.error("Error creating account. Please try again.")
         return None
