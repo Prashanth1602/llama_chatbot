@@ -34,7 +34,7 @@ if not st.session_state.get("user"):
 
 else:
     st.title("TechieTina - AI Assistant")
-    st.write("Welcome, {}!".format(st.session_state["user"]))
+    st.write("Welcome, {}!".format(st.session_state["user"].email))
     
     question = st.text_input("What's Your Question:", "")
     
