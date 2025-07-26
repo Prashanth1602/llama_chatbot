@@ -37,7 +37,11 @@ class ChatHistory(Base):
 
 # Create tables
 try:
+    # Drop existing tables if they exist
+    Base.metadata.drop_all(bind=engine)
+    # Create new tables
     Base.metadata.create_all(bind=engine)
+    print("Database tables created successfully")
 except Exception as e:
     print(f"Error creating tables: {str(e)}")
     raise

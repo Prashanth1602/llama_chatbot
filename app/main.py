@@ -1,7 +1,7 @@
 import streamlit as st
 from chatbot import get_response
 from auth import login, signup, login_required
-from models import get_db, ChatHistory
+from models import get_db, ChatHistory, User
 
 st.set_page_config(page_title="TechieTina - AI Assistant", page_icon=":robot_face:", layout="centered")
 
@@ -70,8 +70,14 @@ else:
     
     if st.checkbox("Show Previous Chats"):
         db = next(get_db())
-        chats = db.query(ChatHistory).filter_by(user_id=st.session_state["user"].uid).all()
-        for chat in chats:
-            with st.expander(f"Chat from {chat.created_at}"):
-                st.write("**Question:**", chat.question)
-                st.write("**Response:**", chat.response)
+        try:
+            chats = db.query(ChatHistory).filter_by(user_id=st.session_state["user"].uid).all()
+            if chats:
+                for chat in chats:
+                    with st.expander(f"Chat from {chat.created_at}"):
+                        st.write("**Question:**", chat.question)
+                        st.write("**Response:**", chat.response)
+            else:
+                st.info("No previous chats found.")
+        except Exception as e:
+            st.error(f"Error fetching previous chats: {str(e)}")
