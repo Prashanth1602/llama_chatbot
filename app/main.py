@@ -135,7 +135,7 @@ else:
                         with col2:
                             if st.button("🗑️ Delete", key=f"delete_{chat.id}", help="Delete this chat"):
                                 delete_chat_history(chat.id)
-                                st.experimental_rerun()
+                                st.rerun()
             else:
                 st.info("No previous chats found.")
         except Exception as e:
