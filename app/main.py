@@ -14,6 +14,9 @@ st.set_page_config(
 # Add minimal custom CSS
 st.markdown("""
     <style>
+        body {
+            background-color: #f5f5f5;
+        }
         .st-expander {
             margin-bottom: 10px;
         }
