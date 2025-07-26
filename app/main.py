@@ -11,26 +11,11 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# Add custom CSS for styling
+# Add minimal custom CSS
 st.markdown("""
     <style>
-        .stTextInput label {
-            color: #1E88E5;
-        }
-        .stButton button {
-            background-color: #1E88E5;
-            color: white;
-        }
-        .stButton button:hover {
-            background-color: #1565C0;
-        }
         .st-expander {
-            background-color: #f8f9fa;
-            border-radius: 10px;
             margin-bottom: 10px;
-        }
-        .st-expander:hover {
-            background-color: #e9ecef;
         }
         .delete-button {
             background-color: #dc3545;
@@ -41,9 +26,6 @@ st.markdown("""
         }
         .delete-button:hover {
             background-color: #c82333;
-        }
-        .stCheckbox label {
-            color: #1E88E5;
         }
     </style>
 """, unsafe_allow_html=True)
@@ -126,12 +108,8 @@ else:
                     with st.expander(f"Chat from {chat.created_at}"):
                         col1, col2 = st.columns([4, 1])
                         with col1:
-                            st.markdown("""
-                                <div style='color: #1E88E5; font-weight: bold;'>Question:</div>
-                                <div style='margin-left: 20px;'>{}</div>
-                                <div style='color: #1E88E5; font-weight: bold;'>Response:</div>
-                                <div style='margin-left: 20px;'>{}</div>
-                            """.format(chat.question, chat.response), unsafe_allow_html=True)
+                            st.write("**Question:**", chat.question)
+                            st.write("**Response:**", chat.response)
                         with col2:
                             if st.button("🗑️ Delete", key=f"delete_{chat.id}", help="Delete this chat"):
                                 delete_chat_history(chat.id)
