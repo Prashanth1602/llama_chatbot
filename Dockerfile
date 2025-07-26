@@ -17,7 +17,7 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt
 
 # Copy application code
-COPY llama_chatbot/app/ app/
+COPY app/ app/
 
 # Run Streamlit app
 CMD streamlit run app/main.py --server.port $PORT --server.address 0.0.0.0
