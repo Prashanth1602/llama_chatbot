@@ -1,0 +1,60 @@
+import streamlit as st
+from chatbot import get_response
+from auth import login, signup, login_required
+from models import get_db, ChatHistory
+
+st.set_page_config(page_title="TechieTina - AI Assistant", page_icon=":robot_face:", layout="centered")
+
+if not st.session_state.get("user"):
+    st.title("TechieTina - AI Assistant")
+    
+    tab1, tab2 = st.tabs(["Login", "Sign Up"])
+    
+    with tab1:
+        email = st.text_input("Email")
+        password = st.text_input("Password", type="password")
+        if st.button("Login"):
+            user = login(email, password)
+            if user:
+                st.session_state["user"] = user
+                st.rerun()
+    
+    with tab2:
+        new_email = st.text_input("New Email")
+        new_password = st.text_input("New Password", type="password")
+        if st.button("Sign Up"):
+            user = signup(new_email, new_password)
+            if user:
+                st.session_state["user"] = user
+                st.rerun()
+
+else:
+    st.title("TechieTina - AI Assistant")
+    st.write("Welcome, {}!".format(st.session_state["user"]))
+    
+    question = st.text_input("What's Your Question:", "")
+    
+    if st.button("Get Answer"):
+        if question:
+            with st.spinner("Thinking..."):
+                response = get_response(question)
+                st.markdown(response)
+                
+                db = next(get_db())
+                chat = ChatHistory(
+                    user_id=st.session_state["user"].uid,
+                    question=question,
+                    response=response
+                )
+                db.add(chat)
+                db.commit()
+        else:
+            st.error("Please enter a question before clicking the button.")
+    
+    if st.checkbox("Show Previous Chats"):
+        db = next(get_db())
+        chats = db.query(ChatHistory).filter_by(user_id=st.session_state["user"].uid).all()
+        for chat in chats:
+            with st.expander(f"Chat from {chat.created_at}"):
+                st.write("**Question:**", chat.question)
+                st.write("**Response:**", chat.response)
